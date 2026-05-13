@@ -38,3 +38,11 @@ CREATE TABLE order_items (
     freight_value NUMERIC,
     PRIMARY KEY (order_id, order_item_id)
 );
+
+CREATE TABLE order_payments (
+    order_id VARCHAR(32) REFERENCES orders(order_id),
+    payment_sequential INT,
+    payment_type VARCHAR,
+    payment_installments INT,
+    payment_value NUMERIC
+);
