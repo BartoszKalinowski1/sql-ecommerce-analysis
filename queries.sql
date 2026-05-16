@@ -67,3 +67,11 @@ SELECT
     WHERE o.order_status != 'canceled'
     GROUP BY month
     ORDER BY month ASC;
+
+-- Godziny szczytu zakupowego
+SELECT EXTRACT(HOUR FROM order_purchase_timestamp) AS purchase_hour,
+    COUNT(order_id) AS total_orders
+FROM orders
+WHERE order_status != 'canceled'
+GROUP BY purchase_hour
+ORDER BY total_orders DESC;
