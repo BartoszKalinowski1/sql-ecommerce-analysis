@@ -94,3 +94,17 @@ WITH product_ranks AS (
 SELECT * FROM product_ranks
 WHERE rank < 4
 ORDER BY product_category_name, rank;
+
+-- Top 10 klientów kiedykolwiek
+SELECT c.customer_unique_id,
+    COUNT(o.order_id) AS total_orders,
+    ROUND(SUM(op.payment_value)::numeric, 2) AS total_spent
+FROM customers c
+JOIN orders o
+ON c.customer_id = O.customer_id
+JOIN order_payments op
+ON o.order_id = op.order_id
+WHERE o.order_status != 'canceled'
+GROUP BY c.customer_unique_id
+ORDER BY total_spent DESC
+LIMIT 10;
