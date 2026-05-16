@@ -75,3 +75,22 @@ FROM orders
 WHERE order_status != 'canceled'
 GROUP BY purchase_hour
 ORDER BY total_orders DESC;
+
+-- Ranking top 3 produktów na kategorię
+WITH product_ranks AS (
+    SELECT p.product_category_name,
+        oi.product_id,
+        COUNT(*) AS units_sold,
+        DENSE_RANK() OVER (
+            PARTITION BY p.product_category_name
+            ORDER BY COUNT(*) DESC
+        ) AS rank
+    FROM order_items oi
+    JOIN products p
+    ON oi.product_id = p.product_id
+    WHERE p.product_category_name IS NOT NULL
+    GROUP BY p.product_category_name, oi.product_id
+)
+SELECT * FROM product_ranks
+WHERE rank < 4
+ORDER BY product_category_name, rank;
