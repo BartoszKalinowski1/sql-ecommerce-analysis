@@ -55,3 +55,15 @@ GROUP BY c.customer_state
 HAVING COUNT(*) > 100
 ORDER BY late_delivery_percentage DESC
 LIMIT 10;
+
+-- Przychód miesięczny
+SELECT
+    DATE_TRUNC('month', o.order_purchase_timestamp) AS month,
+    COUNT(o.order_id) as total_orders,
+    ROUND(SUM(op.payment_value)::numeric, 2) AS monthly_revenue
+    FROM orders o
+    JOIN order_payments op
+    ON o.order_id = op.order_id
+    WHERE o.order_status != 'canceled'
+    GROUP BY month
+    ORDER BY month ASC;
